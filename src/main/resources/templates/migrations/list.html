@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Migration Projects</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Migration Projects</h2>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form th:action="@{/migrations}" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <select name="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
+                                        th:selected="${s == currentStatus}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Source</th>
+                                <th>Target</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Planned Start</th>
+                                <th>Planned End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="project : ${projects}">
+                                <td>
+                                    <a th:href="@{/migrations/{id}(id=${project.id})}"
+                                       th:text="${project.name}"></a>
+                                </td>
+                                <td th:text="${project.sourceSystem}"></td>
+                                <td th:text="${project.targetSystem}"></td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${project.migrationType}"></span>
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${project.status.name() == 'COMPLETED' ? 'bg-success' : (project.status.name() == 'FAILED' ? 'bg-danger' : (project.status.name() == 'IN_PROGRESS' ? 'bg-primary' : (project.status.name() == 'ROLLED_BACK' ? 'bg-warning' : 'bg-secondary')))}"
+                                          th:text="${project.status}"></span>
+                                </td>
+                                <td style="min-width: 200px;">
+                                    <th:block th:with="prog=${progressMap[project.id]}">
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar"
+                                                 th:classappend="${prog.failedTasks > 0 ? 'bg-danger' : 'bg-success'}"
+                                                 role="progressbar"
+                                                 th:style="'width: ' + ${prog.progressPercent} + '%'"
+                                                 th:attr="aria-valuenow=${prog.progressPercent}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 th:text="${prog.completedTasks + '/' + prog.totalTasks}">
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </td>
+                                <td th:text="${project.plannedStartDate}"></td>
+                                <td th:text="${project.plannedEndDate}"></td>
+                            </tr>
+                            <tr th:if="${projects.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-4">No migration projects found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${projects.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${projects.first ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/migrations(page=${projects.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, projects.totalPages - 1)}"
+                                th:classappend="${i == projects.number ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/migrations(page=${i})}" th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${projects.last ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/migrations(page=${projects.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

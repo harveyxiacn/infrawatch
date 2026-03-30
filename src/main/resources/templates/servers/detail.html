@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Server: ' + ${server.hostname}">Server Detail</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 th:text="${server.hostname}">Server</h2>
+                <div>
+                    <a th:href="@{/servers/{id}/edit(id=${server.id})}" class="btn btn-primary">Edit</a>
+                    <a th:href="@{/servers}" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Server Information</h5></div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr><th>Hostname</th><td th:text="${server.hostname}"></td></tr>
+                                <tr><th>IP Address</th><td th:text="${server.ipAddress}"></td></tr>
+                                <tr><th>OS</th><td th:text="${server.os}"></td></tr>
+                                <tr><th>Location</th><td th:text="${server.location}"></td></tr>
+                                <tr><th>Status</th><td>
+                                    <span class="badge"
+                                          th:classappend="${server.status.name() == 'ONLINE' ? 'bg-success' : (server.status.name() == 'OFFLINE' ? 'bg-danger' : 'bg-warning')}"
+                                          th:text="${server.status}"></span>
+                                </td></tr>
+                                <tr><th>Environment</th><td>
+                                    <span class="badge bg-info" th:text="${server.environment}"></span>
+                                </td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Hardware</h5></div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr><th>CPU Cores</th><td th:text="${server.cpuCores}"></td></tr>
+                                <tr><th>RAM (GB)</th><td th:text="${server.ramGb}"></td></tr>
+                                <tr><th>Disk (GB)</th><td th:text="${server.diskGb}"></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4" th:if="${latestMetric != null}">
+                <div class="card-header"><h5 class="mb-0">Latest Health Metrics</h5></div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h6>CPU</h6>
+                            <h3 th:text="${latestMetric.cpuPercent + '%'}">0%</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <h6>Memory</h6>
+                            <h3 th:text="${latestMetric.memPercent + '%'}">0%</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <h6>Disk</h6>
+                            <h3 th:text="${latestMetric.diskPercent + '%'}">0%</h3>
+                        </div>
+                        <div class="col-md-3">
+                            <h6>Uptime</h6>
+                            <h3 th:text="${latestMetric.uptimeSeconds != null ? (latestMetric.uptimeSeconds / 86400) + 'd' : 'N/A'}">N/A</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">Health Metrics (7 Days)</h5></div>
+                <div class="card-body">
+                    <canvas id="metricsChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.2/dist/chart.umd.js}"></script>
+<script th:inline="javascript">
+    const metrics = [[${metrics}]];
+    if (metrics && metrics.length > 0) {
+        const labels = metrics.map(m => new Date(m.timestamp).toLocaleDateString());
+        new Chart(document.getElementById('metricsChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'CPU %', data: metrics.map(m => m.cpuPercent), borderColor: '#dc3545', fill: false },
+                    { label: 'Memory %', data: metrics.map(m => m.memPercent), borderColor: '#0d6efd', fill: false },
+                    { label: 'Disk %', data: metrics.map(m => m.diskPercent), borderColor: '#ffc107', fill: false }
+                ]
+            },
+            options: { responsive: true, scales: { y: { min: 0, max: 100 } } }
+        });
+    }
+</script>
+</body>
+</html>

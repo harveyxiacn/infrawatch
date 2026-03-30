@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Hypervisors</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Hypervisors</h2>
+                <a th:href="@{/virtualization/vms}" class="btn btn-outline-primary">View VMs</a>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hostname</th>
+                                <th>Type</th>
+                                <th>Version</th>
+                                <th>CPU Cores</th>
+                                <th>RAM (GB)</th>
+                                <th>Storage (GB)</th>
+                                <th>Cluster</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="hv : ${hypervisors}">
+                                <td th:text="${hv.hostname}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${hv.type.name() == 'VMWARE' ? 'bg-primary' : (hv.type.name() == 'KVM' ? 'bg-success' : 'bg-info')}"
+                                          th:text="${hv.type}"></span>
+                                </td>
+                                <td th:text="${hv.version}"></td>
+                                <td th:text="${hv.totalCpuCores}"></td>
+                                <td th:text="${hv.totalRamGb}"></td>
+                                <td th:text="${hv.totalStorageGb}"></td>
+                                <td th:text="${hv.cluster}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${hv.status == 'ACTIVE' ? 'bg-success' : 'bg-secondary'}"
+                                          th:text="${hv.status}"></span>
+                                </td>
+                            </tr>
+                            <tr th:if="${hypervisors.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-4">No hypervisors found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${hypervisors.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${hypervisors.first ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/virtualization(page=${hypervisors.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, hypervisors.totalPages - 1)}"
+                                th:classappend="${i == hypervisors.number ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/virtualization(page=${i})}" th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${hypervisors.last ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/virtualization(page=${hypervisors.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

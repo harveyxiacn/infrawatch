@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Servers</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Servers</h2>
+                <a th:href="@{/servers/new}" class="btn btn-primary">Add Server</a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form th:action="@{/servers}" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control"
+                                   placeholder="Search hostname..." th:value="${search}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
+                                        th:selected="${s == currentStatus}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="environment" class="form-select">
+                                <option value="">All Environments</option>
+                                <option th:each="e : ${environments}" th:value="${e}" th:text="${e}"
+                                        th:selected="${e == currentEnvironment}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hostname</th>
+                                <th>IP Address</th>
+                                <th>OS</th>
+                                <th>CPU</th>
+                                <th>RAM (GB)</th>
+                                <th>Status</th>
+                                <th>Environment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="server : ${servers}">
+                                <td>
+                                    <a th:href="@{/servers/{id}(id=${server.id})}" th:text="${server.hostname}"></a>
+                                </td>
+                                <td th:text="${server.ipAddress}"></td>
+                                <td th:text="${server.os}"></td>
+                                <td th:text="${server.cpuCores}"></td>
+                                <td th:text="${server.ramGb}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${server.status.name() == 'ONLINE' ? 'bg-success' : (server.status.name() == 'OFFLINE' ? 'bg-danger' : 'bg-warning')}"
+                                          th:text="${server.status}"></span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info" th:text="${server.environment}"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/servers/{id}/edit(id=${server.id})}"
+                                       class="btn btn-sm btn-outline-primary">Edit</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${servers.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-4">No servers found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${servers.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${servers.first ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/servers(page=${servers.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, servers.totalPages - 1)}"
+                                th:classappend="${i == servers.number ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/servers(page=${i})}" th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${servers.last ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/servers(page=${servers.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

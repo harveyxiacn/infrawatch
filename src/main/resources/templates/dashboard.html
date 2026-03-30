@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Dashboard — InfraWatch</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <nav class="navbar navbar-light bg-white border-bottom px-4 py-2">
+            <span class="fw-bold">Dashboard</span>
+            <div class="d-flex align-items-center">
+                <span class="me-3" sec:authentication="name">User</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                </form>
+            </div>
+        </nav>
+
+        <div class="container-fluid p-4">
+            <h2 class="mb-4">Infrastructure Overview</h2>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card summary-card servers">
+                        <div class="card-body">
+                            <h6 class="text-muted">Total Servers</h6>
+                            <h2 th:text="${summary.totalServers}">0</h2>
+                            <small>
+                                <span class="text-success" th:text="${summary.onlineServers + ' online'}"></span> /
+                                <span class="text-danger" th:text="${summary.offlineServers + ' offline'}"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card vms">
+                        <div class="card-body">
+                            <h6 class="text-muted">Virtual Machines</h6>
+                            <h2 th:text="${summary.totalVms}">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card backups">
+                        <div class="card-body">
+                            <h6 class="text-muted">Backup Jobs</h6>
+                            <h2 th:text="${summary.totalBackupJobs}">0</h2>
+                            <small>
+                                <span class="text-success" th:text="${summary.recentBackupSuccessCount + ' success'}"></span> /
+                                <span class="text-danger" th:text="${summary.recentBackupFailCount + ' failed'}"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card migrations">
+                        <div class="card-body">
+                            <h6 class="text-muted">Active Migrations</h6>
+                            <h2 th:text="${summary.activeMigrations}">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Server Status Distribution</h5></div>
+                        <div class="card-body">
+                            <canvas id="serverStatusChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Quick Links</h5></div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                <a th:href="@{/servers}" class="list-group-item list-group-item-action">Manage Servers</a>
+                                <a th:href="@{/virtualization}" class="list-group-item list-group-item-action">Virtualization</a>
+                                <a th:href="@{/backup}" class="list-group-item list-group-item-action">Backup & DR</a>
+                                <a th:href="@{/migrations}" class="list-group-item list-group-item-action">Data Migrations</a>
+                                <a th:href="@{/reports}" class="list-group-item list-group-item-action">Generate Reports</a>
+                                <a th:href="@{/tests}" class="list-group-item list-group-item-action">System Testing</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/webjars/chart.js/4.4.2/dist/chart.umd.js}"></script>
+<script th:inline="javascript">
+    const online = [[${summary.onlineServers}]];
+    const offline = [[${summary.offlineServers}]];
+    const maintenance = [[${summary.totalServers}]] - online - offline;
+
+    new Chart(document.getElementById('serverStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Online', 'Offline', 'Maintenance'],
+            datasets: [{
+                data: [online, offline, maintenance],
+                backgroundColor: ['#198754', '#dc3545', '#ffc107']
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+</body>
+</html>

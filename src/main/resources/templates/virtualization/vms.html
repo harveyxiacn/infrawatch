@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Virtual Machines</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Virtual Machines</h2>
+                <a th:href="@{/virtualization}" class="btn btn-outline-primary">View Hypervisors</a>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form th:action="@{/virtualization/vms}" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <select name="hypervisorId" class="form-select">
+                                <option value="">All Hypervisors</option>
+                                <option th:each="hv : ${hypervisors}"
+                                        th:value="${hv.id}" th:text="${hv.hostname}"
+                                        th:selected="${hv.id == currentHypervisorId}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
+                                        th:selected="${s == currentStatus}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-secondary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Guest OS</th>
+                                <th>vCPU</th>
+                                <th>vRAM (GB)</th>
+                                <th>vDisk (GB)</th>
+                                <th>Hypervisor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="vm : ${vms}">
+                                <td th:text="${vm.name}"></td>
+                                <td th:text="${vm.guestOs}"></td>
+                                <td th:text="${vm.vcpu}"></td>
+                                <td th:text="${vm.vramGb}"></td>
+                                <td th:text="${vm.vdiskGb}"></td>
+                                <td th:text="${vm.hypervisor.hostname}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${vm.status.name() == 'RUNNING' ? 'bg-success' : (vm.status.name() == 'STOPPED' ? 'bg-danger' : 'bg-warning')}"
+                                          th:text="${vm.status}"></span>
+                                </td>
+                            </tr>
+                            <tr th:if="${vms.isEmpty()}">
+                                <td colspan="7" class="text-center text-muted py-4">No virtual machines found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${vms.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${vms.first ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/virtualization/vms(page=${vms.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, vms.totalPages - 1)}"
+                                th:classappend="${i == vms.number ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/virtualization/vms(page=${i})}" th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${vms.last ? 'disabled' : ''}">
+                                <a class="page-link" th:href="@{/virtualization/vms(page=${vms.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

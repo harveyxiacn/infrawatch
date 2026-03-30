@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Drill Logs</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2>Drill Logs</h2>
+                    <p class="text-muted mb-0" th:text="'DR Plan: ' + ${plan.systemName}"></p>
+                </div>
+                <a th:href="@{/backup/dr/plans}" class="btn btn-secondary">Back to Plans</a>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Drill Date</th>
+                                <th>Scope</th>
+                                <th>Participants</th>
+                                <th>Steps Executed</th>
+                                <th>Issues Found</th>
+                                <th>Resolution</th>
+                                <th>Result</th>
+                                <th>Created By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="drill : ${drills}">
+                                <td th:text="${drill.drillDate}"></td>
+                                <td th:text="${drill.scope}"></td>
+                                <td th:text="${drill.participants}"></td>
+                                <td th:text="${drill.stepsExecuted}"></td>
+                                <td th:text="${drill.issuesFound}"></td>
+                                <td th:text="${drill.resolution}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${drill.result == 'PASS' ? 'bg-success' : 'bg-danger'}"
+                                          th:text="${drill.result}"></span>
+                                </td>
+                                <td th:text="${drill.createdBy}"></td>
+                            </tr>
+                            <tr th:if="${drills.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-4">No drill logs found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${drills.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${drills.first ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}/drills(id=${plan.id}, page=${drills.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, drills.totalPages - 1)}"
+                                th:classappend="${i == drills.number ? 'active' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}/drills(id=${plan.id}, page=${i})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${drills.last ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}/drills(id=${plan.id}, page=${drills.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

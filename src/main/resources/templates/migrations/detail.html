@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Migration: ' + ${project.name}">Migration Detail</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 th:text="${project.name}">Migration Project</h2>
+                <a th:href="@{/migrations}" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+
+            <!-- Project Info & Progress -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Project Information</h5></div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr><th>Name</th><td th:text="${project.name}"></td></tr>
+                                <tr><th>Description</th><td th:text="${project.description}"></td></tr>
+                                <tr><th>Source System</th><td th:text="${project.sourceSystem}"></td></tr>
+                                <tr><th>Target System</th><td th:text="${project.targetSystem}"></td></tr>
+                                <tr><th>Type</th><td>
+                                    <span class="badge bg-secondary" th:text="${project.migrationType}"></span>
+                                </td></tr>
+                                <tr><th>Status</th><td>
+                                    <span class="badge"
+                                          th:classappend="${project.status.name() == 'COMPLETED' ? 'bg-success' : (project.status.name() == 'FAILED' ? 'bg-danger' : (project.status.name() == 'IN_PROGRESS' ? 'bg-primary' : (project.status.name() == 'ROLLED_BACK' ? 'bg-warning' : 'bg-secondary')))}"
+                                          th:text="${project.status}"></span>
+                                </td></tr>
+                                <tr><th>Planned Start</th><td th:text="${project.plannedStartDate}"></td></tr>
+                                <tr><th>Planned End</th><td th:text="${project.plannedEndDate}"></td></tr>
+                                <tr><th>Actual Start</th><td th:text="${project.actualStartDate}"></td></tr>
+                                <tr><th>Actual End</th><td th:text="${project.actualEndDate}"></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Progress</h5></div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <h1 th:text="${progress.progressPercent + '%'}">0%</h1>
+                                <p class="text-muted">Task Completion</p>
+                            </div>
+                            <div class="progress mb-3" style="height: 30px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     th:style="'width: ' + ${progress.progressPercent} + '%'"
+                                     th:attr="aria-valuenow=${progress.progressPercent}"
+                                     aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <h4 th:text="${progress.totalTasks}">0</h4>
+                                    <small class="text-muted">Total Tasks</small>
+                                </div>
+                                <div class="col-4">
+                                    <h4 class="text-success" th:text="${progress.completedTasks}">0</h4>
+                                    <small class="text-muted">Completed</small>
+                                </div>
+                                <div class="col-4">
+                                    <h4 class="text-danger" th:text="${progress.failedTasks}">0</h4>
+                                    <small class="text-muted">Failed</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="card mb-4">
+                <div class="card-header"><h5 class="mb-0">Migration Tasks</h5></div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Dataset</th>
+                                <th>Source Table</th>
+                                <th>Target Table</th>
+                                <th>Expected Rows</th>
+                                <th>Actual Rows</th>
+                                <th>Status</th>
+                                <th>Validations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="task : ${tasks}">
+                                <td th:text="${task.sortOrder}"></td>
+                                <td th:text="${task.datasetName}"></td>
+                                <td th:text="${task.sourceTable}"></td>
+                                <td th:text="${task.targetTable}"></td>
+                                <td th:text="${task.expectedRowCount}"></td>
+                                <td th:text="${task.actualRowCount}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${task.status == 'COMPLETED' ? 'bg-success' : (task.status == 'FAILED' ? 'bg-danger' : (task.status == 'IN_PROGRESS' ? 'bg-primary' : 'bg-secondary'))}"
+                                          th:text="${task.status}"></span>
+                                </td>
+                                <td>
+                                    <th:block th:with="validations=${validationsMap[task.id]}">
+                                        <span th:if="${validations != null && !validations.isEmpty()}"
+                                              class="badge bg-info"
+                                              th:text="${validations.size() + ' run'}"></span>
+                                        <span th:if="${validations == null || validations.isEmpty()}"
+                                              class="text-muted">None</span>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            <tr th:if="${tasks.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-4">No tasks defined yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Validation Results -->
+            <div class="card" th:each="task : ${tasks}"
+                 th:if="${validationsMap[task.id] != null && !validationsMap[task.id].isEmpty()}"
+                 class="mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        Validation Results - <span th:text="${task.datasetName}"></span>
+                    </h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Type</th>
+                                <th>Source Value</th>
+                                <th>Target Value</th>
+                                <th>Passed</th>
+                                <th>Notes</th>
+                                <th>Executed At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="v : ${validationsMap[task.id]}">
+                                <td th:text="${v.validationType}"></td>
+                                <td th:text="${v.sourceValue}"></td>
+                                <td th:text="${v.targetValue}"></td>
+                                <td>
+                                    <span class="badge" th:classappend="${v.passed ? 'bg-success' : 'bg-danger'}"
+                                          th:text="${v.passed ? 'PASS' : 'FAIL'}"></span>
+                                </td>
+                                <td th:text="${v.notes}"></td>
+                                <td th:text="${v.executedAt}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

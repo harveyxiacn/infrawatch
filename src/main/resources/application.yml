@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: infrawatch
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+infrawatch:
+  jwt:
+    secret: ${JWT_SECRET:aW5mcmF3YXRjaC1kZXYtc2VjcmV0LWtleS1jaGFuZ2UtaW4tcHJvZHVjdGlvbi0yMDI2}
+    expiration-ms: 86400000
+  reports:
+    output-dir: ./reports
+    templates-dir: classpath:reports/
+  metrics:
+    retention-days: 90
+  snapshots:
+    alert-age-days: 7

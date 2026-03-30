@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="sidebar" class="sidebar bg-dark text-white position-fixed" style="width: 250px; min-height: 100vh; z-index: 1000;">
+    <div class="p-3 border-bottom border-secondary">
+        <h5 class="mb-0 fw-bold">InfraWatch</h5>
+        <small class="text-muted">Infrastructure Monitor</small>
+    </div>
+    <ul class="nav flex-column p-2">
+        <li class="nav-item">
+            <a th:href="@{/}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/servers}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Servers
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/virtualization}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Virtualization
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/backup}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Backup & DR
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/migrations}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Migrations
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/reports}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Reports
+            </a>
+        </li>
+        <li class="nav-item">
+            <a th:href="@{/tests}" class="nav-link text-white">
+                <span class="me-2">&#9632;</span> Testing
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Backup Trend</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
+        <div class="container-fluid p-4">
+            <h2 class="mb-4">Backup Trend (Last 30 Days)</h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="backupTrendChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Daily Breakdown</div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Success</th>
+                                <th>Failed</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${trendData}">
+                                <td th:text="${item.date}"></td>
+                                <td><span class="badge bg-success" th:text="${item.successCount}"></span></td>
+                                <td><span class="badge bg-danger" th:text="${item.failedCount}"></span></td>
+                                <td th:text="${item.totalCount}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(trendData)}">
+                                <td colspan="4" class="text-center text-muted py-4">No trend data available.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+<!-- Chart placeholder: integrate Chart.js or similar library for canvas rendering -->
+</body>
+</html>
