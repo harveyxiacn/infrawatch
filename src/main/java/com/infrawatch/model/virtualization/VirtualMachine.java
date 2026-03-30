@@ -37,7 +37,7 @@ public class VirtualMachine extends BaseEntity {
     @Builder.Default
     private VmStatus status = VmStatus.RUNNING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hypervisor_id", nullable = false)
     private Hypervisor hypervisor;
 }

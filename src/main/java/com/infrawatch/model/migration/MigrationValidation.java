@@ -1,5 +1,6 @@
 package com.infrawatch.model.migration;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infrawatch.model.migration.enums.ValidationType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class MigrationValidation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
     private MigrationTask task;

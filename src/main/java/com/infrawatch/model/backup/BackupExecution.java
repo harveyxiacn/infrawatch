@@ -1,5 +1,6 @@
 package com.infrawatch.model.backup;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infrawatch.model.backup.enums.ExecutionStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,7 @@ public class BackupExecution {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
     private BackupJob job;

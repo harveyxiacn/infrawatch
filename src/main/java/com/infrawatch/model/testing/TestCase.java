@@ -1,5 +1,6 @@
 package com.infrawatch.model.testing;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infrawatch.model.base.BaseEntity;
 import com.infrawatch.model.server.Server;
 import jakarta.persistence.*;
@@ -20,6 +21,7 @@ public class TestCase extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String category;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "server_id")
     private Server server;
