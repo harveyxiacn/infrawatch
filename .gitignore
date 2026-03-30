@@ -1,0 +1,64 @@
+# Compiled class files
+target/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.vscode/
+*.swp
+*.swo
+*~
+.factorypath
+.apt_generated/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Spring Boot
+spring-shell.log
+
+# Environment / secrets
+.env
+*.env
+application-local.yml
+application-local.properties
+
+# Generated reports
+generated-reports/
+
+# JasperReports compiled
+*.jasper
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Test output
+test-output/
+surefire-reports/
+failsafe-reports/
+
+# JaCoCo
+jacoco.exec
+
+# Docker
+docker-compose.override.yml
+
+# Node (for any frontend tooling)
+node_modules/
