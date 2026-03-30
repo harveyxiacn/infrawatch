@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="sidebar" class="sidebar bg-dark text-white position-fixed" style="width: 250px; min-height: 100vh; z-index: 1000;">
-    <div class="p-3 border-bottom border-secondary">
-        <h5 class="mb-0 fw-bold">InfraWatch</h5>
-        <small class="text-muted">Infrastructure Monitor</small>
+<nav th:fragment="sidebar" class="sidebar position-fixed" style="min-height: 100vh; z-index: 1000;">
+    <div class="sidebar-brand">
+        <h5><span class="brand-dot"></span> INFRAWATCH</h5>
+        <small>Infrastructure Monitor</small>
     </div>
-    <ul class="nav flex-column p-2">
+    <ul class="nav flex-column">
+        <li class="nav-section">Overview</li>
         <li class="nav-item">
-            <a th:href="@{/}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Dashboard
+            <a th:href="@{/}" class="nav-link">
+                <span class="nav-icon">&#9636;</span> Dashboard
+            </a>
+        </li>
+
+        <li class="nav-section">Infrastructure</li>
+        <li class="nav-item">
+            <a th:href="@{/servers}" class="nav-link">
+                <span class="nav-icon">&#9881;</span> Servers
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{/servers}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Servers
+            <a th:href="@{/virtualization}" class="nav-link">
+                <span class="nav-icon">&#9707;</span> Virtualization
+            </a>
+        </li>
+
+        <li class="nav-section">Operations</li>
+        <li class="nav-item">
+            <a th:href="@{/backup/jobs}" class="nav-link">
+                <span class="nav-icon">&#9742;</span> Backup &amp; DR
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{/virtualization}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Virtualization
+            <a th:href="@{/migrations}" class="nav-link">
+                <span class="nav-icon">&#8644;</span> Migrations
+            </a>
+        </li>
+
+        <li class="nav-section">Intelligence</li>
+        <li class="nav-item">
+            <a th:href="@{/reports}" class="nav-link">
+                <span class="nav-icon">&#9783;</span> Reports
             </a>
         </li>
         <li class="nav-item">
-            <a th:href="@{/backup}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Backup & DR
-            </a>
-        </li>
-        <li class="nav-item">
-            <a th:href="@{/migrations}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Migrations
-            </a>
-        </li>
-        <li class="nav-item">
-            <a th:href="@{/reports}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Reports
-            </a>
-        </li>
-        <li class="nav-item">
-            <a th:href="@{/tests}" class="nav-link text-white">
-                <span class="me-2">&#9632;</span> Testing
+            <a th:href="@{/tests}" class="nav-link">
+                <span class="nav-icon">&#10003;</span> Testing
             </a>
         </li>
     </ul>

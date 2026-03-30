@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <nav th:fragment="breadcrumb" aria-label="breadcrumb">
-    <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
-        <li th:if="${breadcrumb}" class="breadcrumb-item active" th:text="${breadcrumb}"></li>
+    <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
+        <li class="breadcrumb-item"><a th:href="@{/}" style="color: #8b8fa3;">Home</a></li>
+        <li th:if="${breadcrumb}" class="breadcrumb-item active" style="color: #c9cdd8;" th:text="${breadcrumb}"></li>
     </ol>
 </nav>
 </body>

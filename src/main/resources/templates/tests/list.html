@@ -1,20 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Test Cases</title>
+    <title>Test Cases — InfraWatch</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
 </head>
 <body>
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-        <div class="container-fluid p-4">
-            <h2 class="mb-4">Test Cases</h2>
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">Test Cases</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
+                <h2>Test Cases</h2>
+            </div>
             <div class="card">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Category</th>

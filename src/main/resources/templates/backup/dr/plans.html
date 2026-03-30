@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>DR Plans</title>
+    <title>DR Plans — InfraWatch</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
 </head>
 <body>
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-        <div class="container-fluid p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">DR Plans</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
                 <h2>Disaster Recovery Plans</h2>
             </div>
 
             <div class="card">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>System Name</th>
                                 <th>RTO (min)</th>
@@ -32,8 +41,8 @@
                         <tbody>
                             <tr th:each="plan : ${plans}">
                                 <td th:text="${plan.systemName}"></td>
-                                <td th:text="${plan.rtoMinutes}"></td>
-                                <td th:text="${plan.rpoMinutes}"></td>
+                                <td class="mono" th:text="${plan.rtoMinutes}"></td>
+                                <td class="mono" th:text="${plan.rpoMinutes}"></td>
                                 <td th:text="${plan.responsibleTeam}"></td>
                                 <td th:text="${plan.contactEmail}"></td>
                                 <td><span class="badge bg-info" th:text="'v' + ${plan.version}"></span></td>

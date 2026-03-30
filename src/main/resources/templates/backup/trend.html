@@ -1,16 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Backup Trend</title>
+    <title>Backup Trend — InfraWatch</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
 </head>
 <body>
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-        <div class="container-fluid p-4">
-            <h2 class="mb-4">Backup Trend (Last 30 Days)</h2>
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">Backup Trend</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
+                <h2>Backup Trend (Last 30 Days)</h2>
+            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -22,7 +33,7 @@
                 <div class="card-header">Daily Breakdown</div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>Date</th>
                                 <th>Success</th>
@@ -50,6 +61,9 @@
 <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/webjars/chart.js/4.4.2/dist/chart.umd.js}"></script>
 <script th:inline="javascript">
+    Chart.defaults.color = '#8b8fa3';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
     const trendData = [[${trendData}]];
     if (trendData && trendData.length > 0) {
         const labels = trendData.map(d => d.date);

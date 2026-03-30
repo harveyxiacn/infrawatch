@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Backup Jobs</title>
+    <title>Backup Jobs — InfraWatch</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
 </head>
 <body>
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-        <div class="container-fluid p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">Backup Jobs</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
                 <h2>Backup Jobs</h2>
             </div>
 
             <div class="card">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Type</th>
@@ -34,9 +43,9 @@
                                 <td>
                                     <span class="badge bg-secondary" th:text="${job.type}"></span>
                                 </td>
-                                <td th:text="${job.sourceSystem}"></td>
-                                <td th:text="${job.targetLocation}"></td>
-                                <td th:text="${job.scheduleCron}"></td>
+                                <td class="mono" th:text="${job.sourceSystem}"></td>
+                                <td class="mono" th:text="${job.targetLocation}"></td>
+                                <td class="mono" th:text="${job.scheduleCron}"></td>
                                 <td th:text="${job.retentionDays}"></td>
                                 <td>
                                     <span class="badge"

@@ -9,83 +9,110 @@
 <body>
 <div class="d-flex">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-        <nav class="navbar navbar-light bg-white border-bottom px-4 py-2">
-            <span class="fw-bold">Dashboard</span>
-            <div class="d-flex align-items-center">
-                <span class="me-3" sec:authentication="name">User</span>
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">Dashboard</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
                 <form th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                    <button type="submit" class="btn-logout">Sign Out</button>
                 </form>
             </div>
-        </nav>
+        </div>
 
-        <div class="container-fluid p-4">
-            <h2 class="mb-4">Infrastructure Overview</h2>
+        <div class="page-container">
+            <div class="page-header">
+                <h2>Infrastructure Overview</h2>
+            </div>
 
-            <div class="row mb-4">
+            <!-- Stat Cards -->
+            <div class="row g-3 mb-4">
                 <div class="col-md-3">
-                    <div class="card summary-card servers">
-                        <div class="card-body">
-                            <h6 class="text-muted">Total Servers</h6>
-                            <h2 th:text="${summary.totalServers}">0</h2>
-                            <small>
-                                <span class="text-success" th:text="${summary.onlineServers + ' online'}"></span> /
-                                <span class="text-danger" th:text="${summary.offlineServers + ' offline'}"></span>
-                            </small>
+                    <div class="stat-card servers">
+                        <div class="stat-label">Total Servers</div>
+                        <div class="stat-value" th:text="${summary.totalServers}">0</div>
+                        <div class="stat-detail">
+                            <span class="up" th:text="${summary.onlineServers + ' online'}"></span>
+                            <span style="margin: 0 0.25rem; color: var(--iw-text-muted);">/</span>
+                            <span class="down" th:text="${summary.offlineServers + ' offline'}"></span>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card summary-card vms">
-                        <div class="card-body">
-                            <h6 class="text-muted">Virtual Machines</h6>
-                            <h2 th:text="${summary.totalVms}">0</h2>
+                    <div class="stat-card vms">
+                        <div class="stat-label">Virtual Machines</div>
+                        <div class="stat-value" th:text="${summary.totalVms}">0</div>
+                        <div class="stat-detail">Across all hypervisors</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card backups">
+                        <div class="stat-label">Backup Jobs</div>
+                        <div class="stat-value" th:text="${summary.totalBackupJobs}">0</div>
+                        <div class="stat-detail">
+                            <span class="up" th:text="${summary.recentBackupSuccessCount + ' success'}"></span>
+                            <span style="margin: 0 0.25rem; color: var(--iw-text-muted);">/</span>
+                            <span class="down" th:text="${summary.recentBackupFailCount + ' failed'}"></span>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card summary-card backups">
-                        <div class="card-body">
-                            <h6 class="text-muted">Backup Jobs</h6>
-                            <h2 th:text="${summary.totalBackupJobs}">0</h2>
-                            <small>
-                                <span class="text-success" th:text="${summary.recentBackupSuccessCount + ' success'}"></span> /
-                                <span class="text-danger" th:text="${summary.recentBackupFailCount + ' failed'}"></span>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card summary-card migrations">
-                        <div class="card-body">
-                            <h6 class="text-muted">Active Migrations</h6>
-                            <h2 th:text="${summary.activeMigrations}">0</h2>
-                        </div>
+                    <div class="stat-card migrations">
+                        <div class="stat-label">Active Migrations</div>
+                        <div class="stat-value" th:text="${summary.activeMigrations}">0</div>
+                        <div class="stat-detail">Projects in progress</div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
+            <!-- Charts Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-5">
                     <div class="card">
-                        <div class="card-header"><h5 class="mb-0">Server Status Distribution</h5></div>
-                        <div class="card-body">
-                            <canvas id="serverStatusChart" height="200"></canvas>
+                        <div class="card-header"><h5>Server Status</h5></div>
+                        <div class="card-body" style="height: 280px; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="serverStatusChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="card">
-                        <div class="card-header"><h5 class="mb-0">Quick Links</h5></div>
+                        <div class="card-header"><h5>System Health</h5></div>
                         <div class="card-body">
-                            <div class="list-group list-group-flush">
-                                <a th:href="@{/servers}" class="list-group-item list-group-item-action">Manage Servers</a>
-                                <a th:href="@{/virtualization}" class="list-group-item list-group-item-action">Virtualization</a>
-                                <a th:href="@{/backup}" class="list-group-item list-group-item-action">Backup & DR</a>
-                                <a th:href="@{/migrations}" class="list-group-item list-group-item-action">Data Migrations</a>
-                                <a th:href="@{/reports}" class="list-group-item list-group-item-action">Generate Reports</a>
-                                <a th:href="@{/tests}" class="list-group-item list-group-item-action">System Testing</a>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.5rem;">Test Results</div>
+                                        <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--iw-green);" th:text="${summary.recentTestPass}">0</div>
+                                        <div style="font-size: 0.75rem; color: var(--iw-text-secondary);">tests passed</div>
+                                        <div style="font-size: 0.75rem; color: var(--iw-red); margin-top: 0.25rem;" th:text="${summary.recentTestFail + ' failed'}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.5rem;">Backup Success</div>
+                                        <div th:with="total=${summary.recentBackupSuccessCount + summary.recentBackupFailCount}">
+                                            <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--iw-amber);"
+                                                 th:text="${total > 0 ? (summary.recentBackupSuccessCount * 100 / total) + '%' : 'N/A'}">0%</div>
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: var(--iw-text-secondary);">success rate</div>
+                                        <div style="font-size: 0.75rem; color: var(--iw-text-muted); margin-top: 0.25rem;" th:text="${summary.totalBackupJobs + ' active jobs'}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.75rem;">Quick Navigation</div>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <a th:href="@{/servers}" class="btn btn-sm btn-outline-primary">Servers</a>
+                                            <a th:href="@{/virtualization}" class="btn btn-sm btn-outline-primary">VMs</a>
+                                            <a th:href="@{/backup/jobs}" class="btn btn-sm btn-outline-primary">Backups</a>
+                                            <a th:href="@{/backup/dr/plans}" class="btn btn-sm btn-outline-primary">DR Plans</a>
+                                            <a th:href="@{/migrations}" class="btn btn-sm btn-outline-primary">Migrations</a>
+                                            <a th:href="@{/reports}" class="btn btn-sm btn-outline-primary">Reports</a>
+                                            <a th:href="@{/tests}" class="btn btn-sm btn-outline-primary">Tests</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -101,16 +128,37 @@
     const offline = [[${summary.offlineServers}]];
     const maintenance = [[${summary.totalServers}]] - online - offline;
 
+    Chart.defaults.color = '#8b8fa3';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
     new Chart(document.getElementById('serverStatusChart'), {
         type: 'doughnut',
         data: {
             labels: ['Online', 'Offline', 'Maintenance'],
             datasets: [{
                 data: [online, offline, maintenance],
-                backgroundColor: ['#198754', '#dc3545', '#ffc107']
+                backgroundColor: ['#22c55e', '#ef4444', '#f59e0b'],
+                borderWidth: 0,
+                borderRadius: 4,
+                spacing: 3
             }]
         },
-        options: { responsive: true }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 16,
+                        usePointStyle: true,
+                        pointStyleWidth: 8,
+                        font: { family: "'DM Sans'", size: 12 }
+                    }
+                }
+            }
+        }
     });
 </script>
 </body>

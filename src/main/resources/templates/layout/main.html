@@ -12,18 +12,18 @@
     <div class="d-flex">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-        <main class="flex-grow-1" style="margin-left: 250px; min-height: 100vh;">
-            <nav class="navbar navbar-light bg-white border-bottom px-4 py-2">
-                <div th:replace="~{fragments/breadcrumb :: breadcrumb}"></div>
-                <div class="d-flex align-items-center">
-                    <span class="me-3" sec:authentication="name">User</span>
+        <main class="main-content">
+            <div class="top-bar">
+                <span class="page-title" th:text="${pageTitle}">InfraWatch</span>
+                <div class="user-info">
+                    <span class="user-name" sec:authentication="name">User</span>
                     <form th:action="@{/logout}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                        <button type="submit" class="btn-logout">Sign Out</button>
                     </form>
                 </div>
-            </nav>
+            </div>
 
-            <div class="container-fluid p-4">
+            <div class="page-container">
                 <div th:fragment="content"></div>
             </div>
         </main>
