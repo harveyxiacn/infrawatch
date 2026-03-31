@@ -25,7 +25,7 @@
                 <h2>Infrastructure Overview</h2>
             </div>
 
-            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--iw-blue-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--iw-blue);">
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--status-info-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--status-info);">
                 <span th:text="${message}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -38,7 +38,7 @@
                         <div class="stat-value" th:text="${summary.totalServers}">0</div>
                         <div class="stat-detail">
                             <span class="up" th:text="${summary.onlineServers + ' online'}"></span>
-                            <span style="margin: 0 0.25rem; color: var(--iw-text-muted);">/</span>
+                            <span style="margin: 0 0.25rem; color: var(--muted-foreground);">/</span>
                             <span class="down" th:text="${summary.offlineServers + ' offline'}"></span>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                         <div class="stat-value" th:text="${summary.totalBackupJobs}">0</div>
                         <div class="stat-detail">
                             <span class="up" th:text="${summary.recentBackupSuccessCount + ' success'}"></span>
-                            <span style="margin: 0 0.25rem; color: var(--iw-text-muted);">/</span>
+                            <span style="margin: 0 0.25rem; color: var(--muted-foreground);">/</span>
                             <span class="down" th:text="${summary.recentBackupFailCount + ' failed'}"></span>
                         </div>
                     </div>
@@ -86,27 +86,27 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-6">
-                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
-                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.5rem;">Test Results</div>
-                                        <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--iw-green);" th:text="${summary.recentTestPass}">0</div>
-                                        <div style="font-size: 0.75rem; color: var(--iw-text-secondary);">tests passed</div>
-                                        <div style="font-size: 0.75rem; color: var(--iw-red); margin-top: 0.25rem;" th:text="${summary.recentTestFail + ' failed'}"></div>
+                                    <div style="padding: 1rem; background: var(--muted); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted-foreground); margin-bottom: 0.5rem;">Test Results</div>
+                                        <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--status-ok);" th:text="${summary.recentTestPass}">0</div>
+                                        <div style="font-size: 0.75rem; color: var(--muted-foreground);">tests passed</div>
+                                        <div style="font-size: 0.75rem; color: var(--destructive); margin-top: 0.25rem;" th:text="${summary.recentTestFail + ' failed'}"></div>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
-                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.5rem;">Backup Success</div>
+                                    <div style="padding: 1rem; background: var(--muted); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted-foreground); margin-bottom: 0.5rem;">Backup Success</div>
                                         <div th:with="total=${summary.recentBackupSuccessCount + summary.recentBackupFailCount}">
-                                            <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--iw-amber);"
+                                            <div style="font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--status-warn);"
                                                  th:text="${total > 0 ? (summary.recentBackupSuccessCount * 100 / total) + '%' : 'N/A'}">0%</div>
                                         </div>
-                                        <div style="font-size: 0.75rem; color: var(--iw-text-secondary);">success rate</div>
-                                        <div style="font-size: 0.75rem; color: var(--iw-text-muted); margin-top: 0.25rem;" th:text="${summary.totalBackupJobs + ' active jobs'}"></div>
+                                        <div style="font-size: 0.75rem; color: var(--muted-foreground);">success rate</div>
+                                        <div style="font-size: 0.75rem; color: var(--muted-foreground); margin-top: 0.25rem;" th:text="${summary.totalBackupJobs + ' active jobs'}"></div>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div style="padding: 1rem; background: var(--iw-surface-hover); border-radius: 10px;">
-                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--iw-text-muted); margin-bottom: 0.75rem;">Quick Navigation</div>
+                                    <div style="padding: 1rem; background: var(--muted); border-radius: 10px;">
+                                        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted-foreground); margin-bottom: 0.75rem;">Quick Navigation</div>
                                         <div class="d-flex flex-wrap gap-2">
                                             <a th:href="@{/servers}" class="btn btn-sm btn-outline-primary">Servers</a>
                                             <a th:href="@{/virtualization}" class="btn btn-sm btn-outline-primary">VMs</a>
@@ -159,7 +159,7 @@
                         padding: 16,
                         usePointStyle: true,
                         pointStyleWidth: 8,
-                        font: { family: "'DM Sans'", size: 12 }
+                        font: { family: "'Fira Sans'", size: 12 }
                     }
                 }
             }

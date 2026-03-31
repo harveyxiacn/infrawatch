@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
     <style>
         body {
-            background: var(--iw-bg);
+            background: var(--background);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,9 +24,9 @@
             width: 200%;
             height: 200%;
             background:
-                radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(6,182,212,0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(34,197,94,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
             animation: drift 20s ease-in-out infinite alternate;
         }
         @keyframes drift {
@@ -36,14 +36,14 @@
         .login-card {
             position: relative;
             z-index: 1;
-            background: var(--iw-surface);
-            border: 1px solid var(--iw-border);
-            border-radius: 16px;
+            background: var(--card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--card-radius);
             box-shadow: 0 24px 80px rgba(0,0,0,0.5);
             max-width: 400px;
             width: 100%;
             overflow: hidden;
-            animation: fadeUp 0.5s var(--ease-out);
+            animation: fadeUp 0.5s var(--ease);
         }
         .login-top {
             padding: 2.5rem 2rem 1.5rem;
@@ -59,8 +59,8 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--iw-green);
-            box-shadow: 0 0 12px var(--iw-green);
+            background: var(--status-ok);
+            box-shadow: 0 0 12px var(--status-ok);
         }
         .login-top h2 {
             font-family: var(--font-mono);
@@ -71,7 +71,7 @@
             margin: 0;
         }
         .login-top p {
-            color: var(--iw-text-muted);
+            color: var(--muted-foreground);
             font-size: 0.8rem;
             margin: 0.5rem 0 0;
             letter-spacing: 1px;
