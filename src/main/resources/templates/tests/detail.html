@@ -21,7 +21,16 @@
         <div class="page-container">
             <div class="page-header">
                 <h2 th:text="${testCase.name}">Test Case</h2>
-                <a th:href="@{/tests}" class="btn btn-outline-secondary">Back to List</a>
+                <div class="d-flex gap-2">
+                    <form th:action="@{/tests/{id}/execute(id=${testCase.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-primary">Run Test</button>
+                    </form>
+                    <a th:href="@{/tests}" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </div>
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--iw-blue-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--iw-blue);">
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <div class="row mb-4">
                 <div class="col-md-6">

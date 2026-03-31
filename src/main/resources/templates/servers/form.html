@@ -25,7 +25,7 @@
 
             <div class="card mt-4">
                 <div class="card-body">
-                    <form th:action="${server.id != null ? '/api/servers/' + server.id : '/api/servers'}"
+                    <form th:action="${server.id != null ? '/servers/' + server.id + '/edit' : '/servers/new'}"
                           method="post" id="serverForm">
                         <div class="row">
                             <div class="col-md-6 mb-3">

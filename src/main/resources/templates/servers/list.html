@@ -25,6 +25,11 @@
                 <a th:href="@{/servers/new}" class="btn btn-primary">+ Add Server</a>
             </div>
 
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--iw-blue-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--iw-blue);">
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <!-- Filters -->
             <div class="card mb-4">
                 <div class="card-body" style="padding: 1rem 1.25rem !important;">

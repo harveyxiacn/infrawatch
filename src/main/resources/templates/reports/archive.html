@@ -23,6 +23,11 @@
                 <h2>Report Archives</h2>
                 <a th:href="@{/reports}" class="btn btn-outline-secondary">Back to Templates</a>
             </div>
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--iw-blue-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--iw-blue);">
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <div class="card">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
@@ -41,7 +46,7 @@
                                 <td><span class="badge bg-secondary" th:text="${archive.format}"></span></td>
                                 <td th:text="${archive.fileSizeBytes != null ? (archive.fileSizeBytes / 1024) + ' KB' : 'N/A'}"></td>
                                 <td th:text="${#temporals.format(archive.generatedAt, 'yyyy-MM-dd HH:mm')}"></td>
-                                <td><a href="#" class="btn btn-sm btn-outline-primary">Download</a></td>
+                                <td><a th:href="@{/reports/archives/{id}/download(id=${archive.id})}" class="btn btn-sm btn-outline-primary">Download</a></td>
                             </tr>
                             <tr th:if="${archives.isEmpty()}">
                                 <td colspan="5" class="text-center text-muted py-4">No reports generated yet.</td>

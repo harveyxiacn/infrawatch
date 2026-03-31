@@ -1,5 +1,6 @@
 package com.infrawatch.controller.web;
 
+import com.infrawatch.dto.request.ServerCreateRequest;
 import com.infrawatch.model.server.Server;
 import com.infrawatch.model.server.enums.Environment;
 import com.infrawatch.model.server.enums.ServerStatus;
@@ -11,10 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -79,5 +78,27 @@ public class ServerWebController {
         model.addAttribute("statuses", ServerStatus.values());
         model.addAttribute("environments", Environment.values());
         return "servers/form";
+    }
+
+    @PostMapping("/new")
+    public String createServer(@ModelAttribute ServerCreateRequest request, RedirectAttributes redirectAttributes) {
+        Server server = serverService.create(request);
+        redirectAttributes.addFlashAttribute("message", "Server created: " + server.getHostname());
+        return "redirect:/servers";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateServer(@PathVariable UUID id, @ModelAttribute ServerCreateRequest request,
+                               RedirectAttributes redirectAttributes) {
+        Server server = serverService.update(id, request);
+        redirectAttributes.addFlashAttribute("message", "Server updated: " + server.getHostname());
+        return "redirect:/servers/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteServer(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
+        serverService.delete(id);
+        redirectAttributes.addFlashAttribute("message", "Server deleted");
+        return "redirect:/servers";
     }
 }

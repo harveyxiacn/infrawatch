@@ -31,9 +31,17 @@
                             <p class="card-text text-muted" th:text="${template.description}">Description</p>
                             <span class="badge bg-primary" th:text="${template.type}">Type</span>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-sm btn-primary">Generate PDF</button>
-                            <button class="btn btn-sm btn-success">Generate Excel</button>
+                        <div class="card-footer d-flex gap-2">
+                            <form th:action="@{/reports/generate}" method="post" class="d-inline">
+                                <input type="hidden" name="templateId" th:value="${template.id}">
+                                <input type="hidden" name="format" value="PDF">
+                                <button type="submit" class="btn btn-sm btn-primary">Generate PDF</button>
+                            </form>
+                            <form th:action="@{/reports/generate}" method="post" class="d-inline">
+                                <input type="hidden" name="templateId" th:value="${template.id}">
+                                <input type="hidden" name="format" value="EXCEL">
+                                <button type="submit" class="btn btn-sm btn-success">Generate Excel</button>
+                            </form>
                         </div>
                     </div>
                 </div>

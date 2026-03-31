@@ -36,7 +36,7 @@ public class ReportApiController {
 
     @PostMapping("/generate")
     public ResponseEntity<ApiResponse<ReportArchive>> generate(@Valid @RequestBody ReportGenerateRequest request) {
-        ReportArchive archive = reportService.generateReport(request);
+        ReportArchive archive = reportService.generateReport(request.getTemplateId(), request.getFormat());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok(archive, "Report generated successfully"));
     }

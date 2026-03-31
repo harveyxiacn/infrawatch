@@ -66,3 +66,4 @@ node_modules/
 # Local-only guides (not for public repo)
 PRESENTATION_GUIDE*.md
 DEMO_GUIDE*.md
+reports/

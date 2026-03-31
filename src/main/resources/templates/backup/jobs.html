@@ -21,6 +21,12 @@
         <div class="page-container">
             <div class="page-header">
                 <h2>Backup Jobs</h2>
+                <a th:href="@{/backup/jobs/new}" class="btn btn-primary">+ Add Job</a>
+            </div>
+
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="background: var(--iw-blue-soft); border: 1px solid rgba(59,130,246,0.2); color: var(--iw-blue);">
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
             <div class="card">

@@ -1,5 +1,6 @@
 package com.infrawatch.controller.web;
 
+import com.infrawatch.dto.request.BackupJobCreateRequest;
 import com.infrawatch.model.backup.BackupJob;
 import com.infrawatch.model.backup.DRPlan;
 import com.infrawatch.model.backup.enums.BackupType;
@@ -11,9 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -31,6 +31,21 @@ public class BackupWebController {
         model.addAttribute("jobs", jobs);
         model.addAttribute("backupTypes", BackupType.values());
         return "backup/jobs";
+    }
+
+    @GetMapping("/jobs/new")
+    public String newJobForm(Model model) {
+        model.addAttribute("job", new BackupJob());
+        model.addAttribute("backupTypes", BackupType.values());
+        return "backup/job-form";
+    }
+
+    @PostMapping("/jobs/new")
+    public String createJob(@ModelAttribute BackupJobCreateRequest request,
+                            RedirectAttributes redirectAttributes) {
+        BackupJob job = backupService.createJob(request);
+        redirectAttributes.addFlashAttribute("message", "Backup job created: " + job.getName());
+        return "redirect:/backup/jobs";
     }
 
     @GetMapping("/trend")
