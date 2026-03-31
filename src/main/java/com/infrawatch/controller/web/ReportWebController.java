@@ -49,8 +49,8 @@ public class ReportWebController {
 
         String contentType = "EXCEL".equals(archive.getFormat())
                 ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                : "application/octet-stream";
-        String ext = "EXCEL".equals(archive.getFormat()) ? ".xlsx" : ".txt";
+                : "application/pdf";
+        String ext = "EXCEL".equals(archive.getFormat()) ? ".xlsx" : ".pdf";
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archive.getReportName() + ext + "\"")

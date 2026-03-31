@@ -700,6 +700,67 @@ pre { background: var(--iw-surface-hover); color: var(--iw-text); border-radius:
   animation: fadeUp 0.3s var(--ease-out);
 }
 
+/* ============================================================
+   Dark Theme Overrides — catch-all for Bootstrap defaults
+   ============================================================ */
+
+/* Alert close button — needs white filter on dark bg */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Card title / text defaults */
+.card-title { color: var(--iw-text) !important; }
+.card-text { color: var(--iw-text-secondary) !important; }
+.card-footer { color: var(--iw-text) !important; }
+
+/* Strong/bold text */
+strong, b { color: var(--iw-text-secondary); }
+
+/* Table borderless variant */
+.table-borderless td, .table-borderless th {
+  border: none !important;
+}
+
+/* Form check / checkbox */
+.form-check-input {
+  background-color: var(--iw-surface-hover);
+  border-color: var(--iw-border);
+}
+.form-check-input:checked {
+  background-color: var(--iw-blue);
+  border-color: var(--iw-blue);
+}
+.form-check-label { color: var(--iw-text); }
+
+/* Dropdown menus */
+.dropdown-menu {
+  background: var(--iw-surface);
+  border-color: var(--iw-border);
+}
+.dropdown-item { color: var(--iw-text); }
+.dropdown-item:hover { background: var(--iw-surface-hover); }
+
+/* Modal (if used) */
+.modal-content {
+  background: var(--iw-surface);
+  border-color: var(--iw-border);
+  color: var(--iw-text);
+}
+
+/* Breadcrumb */
+.breadcrumb { background: transparent; }
+.breadcrumb-item a { color: var(--iw-text-muted); }
+.breadcrumb-item.active { color: var(--iw-text-secondary); }
+
+/* Misc black text overrides */
+h1, h2, h3, h4, h5, h6 { color: var(--iw-text); }
+p { color: var(--iw-text); }
+label { color: var(--iw-text-secondary); }
+small { color: var(--iw-text-muted); }
+.text-dark { color: var(--iw-text) !important; }
+.text-body { color: var(--iw-text) !important; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .sidebar { display: none !important; }
