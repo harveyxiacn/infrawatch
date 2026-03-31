@@ -398,6 +398,7 @@ a:hover { color: #60A5FA; }
   border-bottom: 1px solid rgba(71,85,105,.2) !important;
   vertical-align: middle;
   border-top: none !important;
+  color: var(--foreground) !important;
 }
 
 .table tbody tr { transition: background 120ms; }
@@ -586,6 +587,30 @@ pre          { background: var(--muted); color: var(--foreground); border-radius
 .dropdown-item:hover { background: var(--muted); }
 
 .modal-content { background: var(--card); border-color: var(--border-subtle); color: var(--foreground); }
+
+/* ════════════════════════════════════════════════════════════
+   CATCH-ALL: force all text visible on dark backgrounds
+   Overrides any Bootstrap defaults that use black/dark text
+   ════════════════════════════════════════════════════════════ */
+body, div, span, td, th, li, dt, dd,
+input, textarea, select, button,
+.card, .card-body, .card-footer,
+.table, .table td, .table th,
+.list-group-item, .nav-link,
+.form-control, .form-select {
+  color: var(--foreground);
+}
+
+/* Bootstrap overrides that sneak in black text */
+.table-hover > tbody > tr:hover > * { color: var(--foreground) !important; }
+.table > :not(caption) > * > * { color: var(--foreground); }
+.form-control:disabled, .form-select:disabled { color: var(--muted-foreground) !important; }
+.input-group-text { background: var(--muted); color: var(--foreground); border-color: var(--border-subtle); }
+.accordion-button { background: var(--card); color: var(--foreground); }
+.offcanvas { background: var(--card); color: var(--foreground); }
+.toast { background: var(--card); color: var(--foreground); }
+.popover { background: var(--card); color: var(--foreground); }
+.tooltip-inner { background: var(--primary); color: var(--foreground); }
 
 /* ════════════════════════════════════════════════════════════
    RESPONSIVE
