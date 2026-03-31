@@ -1,0 +1,430 @@
+/* ════════════════════════════════════════════════════════════
+   InfraWatch — Theme Variants
+   ─────────────────────────────────────────────────────────────
+   Default: IoT Dashboard (defined in infrawatch.css :root)
+   This file adds 3 alternate themes via [data-theme] overrides
+   ════════════════════════════════════════════════════════════ */
+
+/* ────────────────────────────────────────────────────────────
+   THEME: Mission Control
+   Deep slate, DM Sans + JetBrains Mono, electric blue accents
+   ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+[data-theme="mission-control"] {
+  --primary:           #1c2030;
+  --on-primary:        #FFFFFF;
+  --secondary:         #232839;
+  --on-secondary:      #FFFFFF;
+  --accent:            #3b82f6;
+  --on-accent:         #FFFFFF;
+  --background:        #0f1117;
+  --foreground:        #e4e7ec;
+  --card:              #161922;
+  --card-foreground:   #e4e7ec;
+  --muted:             #232839;
+  --muted-foreground:  #8b8fa3;
+  --border:            rgba(255,255,255,0.12);
+  --border-subtle:     rgba(255,255,255,0.06);
+  --destructive:       #ef4444;
+  --on-destructive:    #FFFFFF;
+
+  --status-ok:         #22c55e;
+  --status-ok-soft:    rgba(34,197,94,0.12);
+  --status-warn:       #f59e0b;
+  --status-warn-soft:  rgba(245,158,11,0.12);
+  --status-crit:       #ef4444;
+  --status-crit-soft:  rgba(239,68,68,0.12);
+  --status-info:       #3b82f6;
+  --status-info-soft:  rgba(59,130,246,0.15);
+  --status-purple:     #a855f7;
+  --status-purple-soft:rgba(168,85,247,0.12);
+  --status-cyan:       #06b6d4;
+  --status-cyan-soft:  rgba(6,182,212,0.12);
+
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+}
+
+/* ────────────────────────────────────────────────────────────
+   THEME: Cyberpunk
+   True black OLED, neon green/magenta accents, Space Mono
+   ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+[data-theme="cyberpunk"] {
+  --primary:           #0d0d0d;
+  --on-primary:        #39ff14;
+  --secondary:         #1a1a1a;
+  --on-secondary:      #39ff14;
+  --accent:            #39ff14;
+  --on-accent:         #000000;
+  --background:        #000000;
+  --foreground:        #e0e0e0;
+  --card:              #0a0a0a;
+  --card-foreground:   #e0e0e0;
+  --muted:             #1a1a1a;
+  --muted-foreground:  #666666;
+  --border:            rgba(57,255,20,0.15);
+  --border-subtle:     rgba(57,255,20,0.08);
+  --destructive:       #ff0055;
+  --on-destructive:    #FFFFFF;
+
+  --status-ok:         #39ff14;
+  --status-ok-soft:    rgba(57,255,20,0.1);
+  --status-warn:       #ffb800;
+  --status-warn-soft:  rgba(255,184,0,0.1);
+  --status-crit:       #ff0055;
+  --status-crit-soft:  rgba(255,0,85,0.1);
+  --status-info:       #00d4ff;
+  --status-info-soft:  rgba(0,212,255,0.1);
+  --status-purple:     #bf00ff;
+  --status-purple-soft:rgba(191,0,255,0.1);
+  --status-cyan:       #00d4ff;
+  --status-cyan-soft:  rgba(0,212,255,0.1);
+
+  --font-body: 'Rajdhani', -apple-system, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+[data-theme="cyberpunk"] .sidebar {
+  background: #000000 !important;
+  border-right-color: rgba(57,255,20,0.1);
+}
+
+[data-theme="cyberpunk"] .sidebar-brand h5 {
+  color: #39ff14;
+  text-shadow: 0 0 10px rgba(57,255,20,0.5);
+}
+
+[data-theme="cyberpunk"] .sidebar-brand .brand-dot {
+  background: #39ff14;
+  box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57,255,20,0.3);
+}
+
+[data-theme="cyberpunk"] .stat-card::before {
+  box-shadow: 0 0 8px currentColor;
+}
+
+[data-theme="cyberpunk"] .stat-card.servers::before    { background: linear-gradient(90deg, #00d4ff, transparent); }
+[data-theme="cyberpunk"] .stat-card.vms::before        { background: linear-gradient(90deg, #bf00ff, transparent); }
+[data-theme="cyberpunk"] .stat-card.backups::before    { background: linear-gradient(90deg, #ffb800, transparent); }
+[data-theme="cyberpunk"] .stat-card.migrations::before { background: linear-gradient(90deg, #39ff14, transparent); }
+
+[data-theme="cyberpunk"] .stat-card .stat-value {
+  text-shadow: 0 0 8px rgba(57,255,20,0.3);
+}
+
+[data-theme="cyberpunk"] .btn-primary {
+  background: transparent !important;
+  border-color: #00d4ff !important;
+  color: #00d4ff !important;
+  text-shadow: 0 0 6px rgba(0,212,255,0.4);
+}
+[data-theme="cyberpunk"] .btn-primary:hover {
+  background: rgba(0,212,255,0.15) !important;
+  box-shadow: 0 0 15px rgba(0,212,255,0.3);
+}
+
+[data-theme="cyberpunk"] a { color: #00d4ff; }
+[data-theme="cyberpunk"] a:hover { color: #39ff14; }
+
+/* ────────────────────────────────────────────────────────────
+   THEME: Arctic Light
+   Clean white/blue, Plus Jakarta Sans, professional enterprise
+   ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+[data-theme="arctic"] {
+  --primary:           #1E40AF;
+  --on-primary:        #FFFFFF;
+  --secondary:         #3B82F6;
+  --on-secondary:      #FFFFFF;
+  --accent:            #2563EB;
+  --on-accent:         #FFFFFF;
+  --background:        #F1F5F9;
+  --foreground:        #0F172A;
+  --card:              #FFFFFF;
+  --card-foreground:   #0F172A;
+  --muted:             #E2E8F0;
+  --muted-foreground:  #64748B;
+  --border:            #CBD5E1;
+  --border-subtle:     #E2E8F0;
+  --destructive:       #DC2626;
+  --on-destructive:    #FFFFFF;
+
+  --status-ok:         #16A34A;
+  --status-ok-soft:    rgba(22,163,74,0.1);
+  --status-warn:       #D97706;
+  --status-warn-soft:  rgba(217,119,6,0.1);
+  --status-crit:       #DC2626;
+  --status-crit-soft:  rgba(220,38,38,0.1);
+  --status-info:       #2563EB;
+  --status-info-soft:  rgba(37,99,235,0.1);
+  --status-purple:     #7C3AED;
+  --status-purple-soft:rgba(124,58,237,0.1);
+  --status-cyan:       #0891B2;
+  --status-cyan-soft:  rgba(8,145,178,0.1);
+
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Cascadia Code', monospace;
+}
+
+[data-theme="arctic"] .sidebar {
+  background: #FFFFFF !important;
+  border-right: 1px solid #E2E8F0;
+}
+
+[data-theme="arctic"] .sidebar-brand h5 {
+  color: #0F172A;
+}
+
+[data-theme="arctic"] .sidebar-brand small {
+  color: #64748B;
+}
+
+[data-theme="arctic"] .sidebar-brand .brand-dot {
+  background: #16A34A;
+  box-shadow: 0 0 6px rgba(22,163,74,0.4);
+}
+
+[data-theme="arctic"] .sidebar .nav-section {
+  color: #94A3B8;
+}
+
+[data-theme="arctic"] .sidebar .nav-link {
+  color: #475569 !important;
+}
+
+[data-theme="arctic"] .sidebar .nav-link:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+[data-theme="arctic"] .sidebar .nav-link.active {
+  background: rgba(37,99,235,0.08) !important;
+  color: #2563EB !important;
+}
+
+[data-theme="arctic"] .top-bar {
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+[data-theme="arctic"] .top-bar .page-title { color: #0F172A; }
+[data-theme="arctic"] .top-bar .user-name  { color: #64748B; }
+[data-theme="arctic"] .top-bar .btn-logout {
+  border-color: #E2E8F0;
+  color: #64748B;
+}
+[data-theme="arctic"] .top-bar .btn-logout:hover {
+  border-color: #DC2626;
+  color: #DC2626;
+  background: rgba(220,38,38,0.05);
+}
+
+[data-theme="arctic"] .page-header h2 { color: #0F172A; }
+
+[data-theme="arctic"] .card {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+}
+
+[data-theme="arctic"] .card-header {
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+
+[data-theme="arctic"] .card-header h5 { color: #64748B; }
+
+[data-theme="arctic"] .stat-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+}
+
+[data-theme="arctic"] .stat-card .stat-value { color: #0F172A; }
+
+[data-theme="arctic"] .table thead th {
+  color: #94A3B8 !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+[data-theme="arctic"] .table td {
+  border-bottom: 1px solid #F1F5F9 !important;
+  color: #334155;
+}
+
+[data-theme="arctic"] .table tbody tr:hover {
+  background: #F8FAFC !important;
+}
+
+[data-theme="arctic"] .form-control, [data-theme="arctic"] .form-select {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+[data-theme="arctic"] .page-link {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #475569 !important;
+}
+
+[data-theme="arctic"] .btn-secondary {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+[data-theme="arctic"] .btn-outline-secondary {
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+[data-theme="arctic"] .btn-outline-primary {
+  border-color: #CBD5E1 !important;
+}
+
+[data-theme="arctic"] pre {
+  background: #F1F5F9;
+  color: #334155;
+}
+
+[data-theme="arctic"] .alert-info {
+  background: rgba(37,99,235,0.06);
+  border-color: rgba(37,99,235,0.15);
+  color: #2563EB;
+}
+
+[data-theme="arctic"] .btn-close {
+  filter: none;
+}
+
+[data-theme="arctic"] h1, [data-theme="arctic"] h2,
+[data-theme="arctic"] h3, [data-theme="arctic"] h4,
+[data-theme="arctic"] h5, [data-theme="arctic"] h6 { color: #0F172A; }
+[data-theme="arctic"] p { color: #334155; }
+[data-theme="arctic"] strong, [data-theme="arctic"] b { color: #475569; }
+[data-theme="arctic"] label { color: #475569; }
+
+/* ════════════════════════════════════════════════════════════
+   THEME SWITCHER UI
+   ════════════════════════════════════════════════════════════ */
+.theme-switcher {
+  position: relative;
+  margin-right: .5rem;
+}
+
+.theme-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: .2rem .5rem;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 200ms;
+  display: flex;
+  align-items: center;
+}
+
+.theme-btn:hover {
+  border-color: var(--status-info);
+  color: var(--status-info);
+  background: var(--status-info-soft);
+}
+
+.theme-icon { font-size: 1rem; }
+
+.theme-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  z-index: 1000;
+  display: none;
+  overflow: hidden;
+}
+
+.theme-dropdown.show { display: block; }
+
+.theme-dropdown-header {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted-foreground);
+  padding: .75rem 1rem .4rem;
+}
+
+.theme-option {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  width: 100%;
+  padding: .65rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms;
+  color: var(--foreground);
+}
+
+.theme-option:hover {
+  background: var(--muted);
+}
+
+.theme-option.active {
+  background: var(--status-info-soft);
+}
+
+.theme-option-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted-foreground);
+  margin-top: 5px;
+  flex-shrink: 0;
+  transition: all 200ms;
+}
+
+.theme-option.active .theme-option-dot {
+  background: var(--status-info);
+  box-shadow: 0 0 6px var(--status-info);
+}
+
+.theme-option-label {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--foreground);
+  display: block;
+}
+
+.theme-option-badge {
+  font-family: var(--font-mono);
+  font-size: .5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--status-ok);
+  background: var(--status-ok-soft);
+  padding: .1rem .35rem;
+  border-radius: 3px;
+  margin-left: .35rem;
+  vertical-align: middle;
+}
+
+.theme-option-desc {
+  font-size: .65rem;
+  color: var(--muted-foreground);
+  display: block;
+  margin-top: 1px;
+  line-height: 1.3;
+}
