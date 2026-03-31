@@ -4,6 +4,7 @@ import com.infrawatch.dto.request.ServerCreateRequest;
 import com.infrawatch.model.server.Server;
 import com.infrawatch.model.server.enums.Environment;
 import com.infrawatch.model.server.enums.ServerStatus;
+import com.infrawatch.repository.server.InstallationRepository;
 import com.infrawatch.service.server.HealthMetricService;
 import com.infrawatch.service.server.ServerService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ServerWebController {
 
     private final ServerService serverService;
     private final HealthMetricService healthMetricService;
+    private final InstallationRepository installationRepository;
 
     @GetMapping
     public String list(
@@ -61,6 +63,7 @@ public class ServerWebController {
         model.addAttribute("latestMetric", healthMetricService.getLatest(id));
         model.addAttribute("metrics", healthMetricService.getMetrics(id,
                 LocalDateTime.now().minusDays(7), LocalDateTime.now()));
+        model.addAttribute("installations", installationRepository.findByServerIdOrderByCreatedAtDesc(id, Pageable.ofSize(20)));
         return "servers/detail";
     }
 

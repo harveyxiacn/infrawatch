@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Backup Executions — InfraWatch</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+    <link rel="stylesheet" th:href="@{/css/themes.css}">
+    <script th:src="@{/js/theme-switcher.js}" defer></script>
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">Backup Executions</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
+                <div>
+                    <h2>Execution History</h2>
+                    <p class="text-muted mb-0" th:text="'Job: ' + ${job.name}"></p>
+                </div>
+                <a th:href="@{/backup/jobs}" class="btn btn-secondary">Back to Jobs</a>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                                <th>Data Size (GB)</th>
+                                <th>Duration (s)</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="exec : ${executions}">
+                                <td class="mono" th:text="${#temporals.format(exec.startTime, 'yyyy-MM-dd HH:mm')}"></td>
+                                <td class="mono" th:text="${exec.endTime != null ? #temporals.format(exec.endTime, 'yyyy-MM-dd HH:mm') : '—'}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${exec.status.name() == 'SUCCESS' ? 'bg-success' : (exec.status.name() == 'FAILED' ? 'bg-danger' : (exec.status.name() == 'PARTIAL' ? 'bg-warning' : 'bg-info'))}"
+                                          th:text="${exec.status}"></span>
+                                </td>
+                                <td class="mono" th:text="${exec.dataSizeGb}"></td>
+                                <td class="mono" th:text="${exec.durationSeconds}"></td>
+                                <td th:text="${exec.notes}"></td>
+                            </tr>
+                            <tr th:if="${executions.isEmpty()}">
+                                <td colspan="6" class="text-center text-muted py-4">No execution records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${executions.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${executions.first ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/jobs/{id}/executions(id=${job.id}, page=${executions.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, executions.totalPages - 1)}"
+                                th:classappend="${i == executions.number ? 'active' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/jobs/{id}/executions(id=${job.id}, page=${i})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${executions.last ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/jobs/{id}/executions(id=${job.id}, page=${executions.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -10,6 +10,9 @@ import com.infrawatch.model.server.enums.Environment;
 import com.infrawatch.model.server.enums.ServerStatus;
 import com.infrawatch.service.server.HealthMetricService;
 import com.infrawatch.service.server.ServerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Servers", description = "Server inventory and health metrics management")
 @RestController
 @RequestMapping("/api/servers")
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class ServerApiController {
     private final ServerService serverService;
     private final HealthMetricService healthMetricService;
 
+    @Operation(summary = "List servers", description = "Returns paginated list of servers with optional status, environment, and search filters")
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<ServerResponse>>> list(
             @RequestParam(required = false) ServerStatus status,
@@ -54,12 +59,22 @@ public class ServerApiController {
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(responsePage)));
     }
 
+    @Operation(summary = "Get server by ID", description = "Returns a single server by its unique identifier")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Server found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Server not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ServerResponse>> getById(@PathVariable UUID id) {
         Server server = serverService.findById(id);
         return ResponseEntity.ok(ApiResponse.ok(ServerResponse.from(server)));
     }
 
+    @Operation(summary = "Create server", description = "Creates a new server entry in the inventory")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Server created"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<ServerResponse>> create(@Valid @RequestBody ServerCreateRequest request) {
@@ -68,6 +83,11 @@ public class ServerApiController {
                 .body(ApiResponse.ok(ServerResponse.from(server), "Server created successfully"));
     }
 
+    @Operation(summary = "Update server", description = "Updates an existing server by ID")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Server updated"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Server not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<ServerResponse>> update(
@@ -77,6 +97,11 @@ public class ServerApiController {
         return ResponseEntity.ok(ApiResponse.ok(ServerResponse.from(server), "Server updated successfully"));
     }
 
+    @Operation(summary = "Delete server", description = "Deletes a server by ID (admin only)")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Server deleted"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Server not found")
+    })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID id) {
@@ -84,6 +109,7 @@ public class ServerApiController {
         return ResponseEntity.ok(ApiResponse.ok(null, "Server deleted successfully"));
     }
 
+    @Operation(summary = "Get server metrics", description = "Returns health metrics for a server within an optional time range")
     @GetMapping("/{id}/metrics")
     public ResponseEntity<ApiResponse<List<HealthMetric>>> getMetrics(
             @PathVariable UUID id,
@@ -95,6 +121,7 @@ public class ServerApiController {
         return ResponseEntity.ok(ApiResponse.ok(metrics));
     }
 
+    @Operation(summary = "Get latest metric", description = "Returns the most recent health metric for a server")
     @GetMapping("/{id}/metrics/latest")
     public ResponseEntity<ApiResponse<HealthMetric>> getLatestMetric(@PathVariable UUID id) {
         HealthMetric metric = healthMetricService.getLatest(id);

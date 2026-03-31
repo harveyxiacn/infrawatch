@@ -48,6 +48,15 @@ public class BackupWebController {
         return "redirect:/backup/jobs";
     }
 
+    @GetMapping("/jobs/{jobId}/executions")
+    public String jobExecutions(@PathVariable UUID jobId,
+                                @PageableDefault(size = 20) Pageable pageable,
+                                Model model) {
+        model.addAttribute("job", backupService.findJobById(jobId));
+        model.addAttribute("executions", backupService.findExecutionsByJobId(jobId, pageable));
+        return "backup/executions";
+    }
+
     @GetMapping("/trend")
     public String trend(Model model) {
         model.addAttribute("trendData", backupService.getTrendData(30));
@@ -59,6 +68,15 @@ public class BackupWebController {
         Page<DRPlan> plans = drPlanService.findAll(pageable);
         model.addAttribute("plans", plans);
         return "backup/dr/plans";
+    }
+
+    @GetMapping("/dr/plans/{planId}")
+    public String planDetail(@PathVariable UUID planId,
+                             @PageableDefault(size = 20) Pageable pageable,
+                             Model model) {
+        model.addAttribute("plan", drPlanService.findById(planId));
+        model.addAttribute("drills", drPlanService.findDrillsByPlanId(planId, pageable));
+        return "backup/dr/plan-detail";
     }
 
     @GetMapping("/dr/plans/{planId}/drills")

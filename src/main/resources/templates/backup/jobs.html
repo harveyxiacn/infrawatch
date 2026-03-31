@@ -43,6 +43,7 @@
                                 <th>Schedule</th>
                                 <th>Retention (Days)</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,9 +61,12 @@
                                           th:classappend="${job.enabled ? 'bg-success' : 'bg-danger'}"
                                           th:text="${job.enabled ? 'Enabled' : 'Disabled'}"></span>
                                 </td>
+                                <td>
+                                    <a th:href="@{/backup/jobs/{id}/executions(id=${job.id})}" class="btn btn-sm btn-outline-primary">History</a>
+                                </td>
                             </tr>
                             <tr th:if="${jobs.isEmpty()}">
-                                <td colspan="7" class="text-center text-muted py-4">No backup jobs found.</td>
+                                <td colspan="8" class="text-center text-muted py-4">No backup jobs found.</td>
                             </tr>
                         </tbody>
                     </table>

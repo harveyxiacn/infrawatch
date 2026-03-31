@@ -42,7 +42,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="plan : ${plans}">
-                                <td th:text="${plan.systemName}"></td>
+                                <td><a th:href="@{/backup/dr/plans/{id}(id=${plan.id})}" th:text="${plan.systemName}"></a></td>
                                 <td class="mono" th:text="${plan.rtoMinutes}"></td>
                                 <td class="mono" th:text="${plan.rpoMinutes}"></td>
                                 <td th:text="${plan.responsibleTeam}"></td>

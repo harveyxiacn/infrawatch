@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="'DR Plan: ' + ${plan.systemName} + ' — InfraWatch'">DR Plan Detail</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/infrawatch.css}">
+    <link rel="stylesheet" th:href="@{/css/themes.css}">
+    <script th:src="@{/js/theme-switcher.js}" defer></script>
+</head>
+<body>
+<div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div class="top-bar">
+            <span class="page-title">DR Plan Detail</span>
+            <div class="user-info">
+                <span class="user-name" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-logout">Sign Out</button>
+                </form>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="page-header">
+                <h2 th:text="${plan.systemName}"></h2>
+                <a th:href="@{/backup/dr/plans}" class="btn btn-secondary">Back to Plans</a>
+            </div>
+
+            <!-- Plan Info -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header"><h5>Plan Information</h5></div>
+                        <div class="card-body">
+                            <table class="table" style="margin: 0;">
+                                <tr><td class="text-muted" style="width: 40%; border-top: none !important;">RTO (minutes)</td><td class="mono" style="border-top: none !important;" th:text="${plan.rtoMinutes}"></td></tr>
+                                <tr><td class="text-muted">RPO (minutes)</td><td class="mono" th:text="${plan.rpoMinutes}"></td></tr>
+                                <tr><td class="text-muted">Responsible Team</td><td th:text="${plan.responsibleTeam}"></td></tr>
+                                <tr><td class="text-muted">Contact Email</td><td th:text="${plan.contactEmail}"></td></tr>
+                                <tr><td class="text-muted">Version</td><td><span class="badge bg-info" th:text="'v' + ${plan.version}"></span></td></tr>
+                                <tr><td class="text-muted">Last Review Date</td><td th:text="${plan.lastReviewDate}"></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header"><h5>Recovery Steps</h5></div>
+                        <div class="card-body">
+                            <pre style="white-space: pre-wrap; margin: 0; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.85rem;" th:text="${plan.recoverySteps != null ? plan.recoverySteps : 'No recovery steps defined.'}"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drill History -->
+            <div class="card">
+                <div class="card-header"><h5>Drill History</h5></div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Scope</th>
+                                <th>Result</th>
+                                <th>Issues Found</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="drill : ${drills}">
+                                <td th:text="${drill.drillDate}"></td>
+                                <td th:text="${drill.scope}"></td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${drill.result == 'PASS' ? 'bg-success' : 'bg-danger'}"
+                                          th:text="${drill.result}"></span>
+                                </td>
+                                <td th:text="${drill.issuesFound}"></td>
+                            </tr>
+                            <tr th:if="${drills.isEmpty()}">
+                                <td colspan="4" class="text-center text-muted py-4">No drill records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer" th:if="${drills.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination mb-0 justify-content-center">
+                            <li class="page-item" th:classappend="${drills.first ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}(id=${plan.id}, page=${drills.number - 1})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, drills.totalPages - 1)}"
+                                th:classappend="${i == drills.number ? 'active' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}(id=${plan.id}, page=${i})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${drills.last ? 'disabled' : ''}">
+                                <a class="page-link"
+                                   th:href="@{/backup/dr/plans/{id}(id=${plan.id}, page=${drills.number + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

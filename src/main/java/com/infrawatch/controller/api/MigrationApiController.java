@@ -10,6 +10,9 @@ import com.infrawatch.model.migration.MigrationValidation;
 import com.infrawatch.model.migration.enums.MigrationStatus;
 import com.infrawatch.model.migration.enums.ValidationType;
 import com.infrawatch.service.migration.MigrationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Migrations", description = "Data migration project, task, and validation management")
 @RestController
 @RequestMapping("/api/migrations")
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class MigrationApiController {
 
     // ── Projects ──
 
+    @Operation(summary = "List migration projects", description = "Returns paginated list of migration projects with optional status filter")
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<MigrationProject>>> listProjects(
             @RequestParam(required = false) MigrationStatus status,
@@ -46,12 +51,22 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(page)));
     }
 
+    @Operation(summary = "Get migration project by ID", description = "Returns a single migration project by its unique identifier")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Project found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Project not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<MigrationProject>> getProject(@PathVariable UUID id) {
         MigrationProject project = migrationService.findProjectById(id);
         return ResponseEntity.ok(ApiResponse.ok(project));
     }
 
+    @Operation(summary = "Create migration project", description = "Creates a new data migration project")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Project created"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationProject>> createProject(
@@ -61,6 +76,11 @@ public class MigrationApiController {
                 .body(ApiResponse.ok(project, "Migration project created successfully"));
     }
 
+    @Operation(summary = "Update migration project", description = "Updates an existing migration project by ID")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Project updated"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Project not found")
+    })
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationProject>> updateProject(
@@ -70,6 +90,7 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(project, "Migration project updated successfully"));
     }
 
+    @Operation(summary = "Update project status", description = "Updates only the status of a migration project")
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationProject>> updateProjectStatus(
@@ -79,6 +100,7 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(project, "Migration project status updated"));
     }
 
+    @Operation(summary = "Delete migration project", description = "Deletes a migration project by ID (admin only)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable UUID id) {
@@ -86,6 +108,7 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(null, "Migration project deleted successfully"));
     }
 
+    @Operation(summary = "Get project progress", description = "Returns progress data including task completion percentages for a project")
     @GetMapping("/{id}/progress")
     public ResponseEntity<ApiResponse<MigrationProgressData>> getProjectProgress(@PathVariable UUID id) {
         MigrationProgressData progress = migrationService.getProjectProgress(id);
@@ -94,18 +117,25 @@ public class MigrationApiController {
 
     // ── Tasks ──
 
+    @Operation(summary = "List tasks for a project", description = "Returns all migration tasks belonging to a specific project")
     @GetMapping("/{projectId}/tasks")
     public ResponseEntity<ApiResponse<List<MigrationTask>>> listTasks(@PathVariable UUID projectId) {
         List<MigrationTask> tasks = migrationService.findTasksByProjectId(projectId);
         return ResponseEntity.ok(ApiResponse.ok(tasks));
     }
 
+    @Operation(summary = "Get task by ID", description = "Returns a single migration task by its unique identifier")
     @GetMapping("/tasks/{taskId}")
     public ResponseEntity<ApiResponse<MigrationTask>> getTask(@PathVariable UUID taskId) {
         MigrationTask task = migrationService.findTaskById(taskId);
         return ResponseEntity.ok(ApiResponse.ok(task));
     }
 
+    @Operation(summary = "Create task", description = "Creates a new migration task under a project")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Task created"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     @PostMapping("/{projectId}/tasks")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationTask>> createTask(
@@ -116,6 +146,7 @@ public class MigrationApiController {
                 .body(ApiResponse.ok(created, "Migration task created successfully"));
     }
 
+    @Operation(summary = "Update task", description = "Updates an existing migration task by ID")
     @PutMapping("/tasks/{taskId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationTask>> updateTask(
@@ -125,6 +156,7 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(updated, "Migration task updated successfully"));
     }
 
+    @Operation(summary = "Delete task", description = "Deletes a migration task by ID (admin only)")
     @DeleteMapping("/tasks/{taskId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable UUID taskId) {
@@ -134,6 +166,7 @@ public class MigrationApiController {
 
     // ── Validations ──
 
+    @Operation(summary = "List validations for a task", description = "Returns all validation results for a specific migration task")
     @GetMapping("/tasks/{taskId}/validations")
     public ResponseEntity<ApiResponse<List<MigrationValidation>>> listValidations(
             @PathVariable UUID taskId) {
@@ -141,6 +174,11 @@ public class MigrationApiController {
         return ResponseEntity.ok(ApiResponse.ok(validations));
     }
 
+    @Operation(summary = "Record validation", description = "Records a new validation result for a migration task")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Validation recorded"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @PostMapping("/tasks/{taskId}/validations")
     @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     public ResponseEntity<ApiResponse<MigrationValidation>> recordValidation(
